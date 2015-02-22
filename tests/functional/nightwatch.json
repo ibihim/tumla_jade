@@ -1,0 +1,15 @@
+{
+  "src_folders": ["tests/functional"],
+  "test_settings": {
+    "default" : {
+      "launch_url" : "http://localhost",
+      "selenium_port"  : 4444,
+      "selenium_host"  : "localhost",
+      "desiredCapabilities": {
+        "browserName": "firefox",
+        "javascriptEnabled": true,
+        "acceptSslCerts": true
+      }
+    }
+  }
+}

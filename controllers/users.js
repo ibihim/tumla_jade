@@ -13,7 +13,7 @@ router.post("/", function (req, res, next) {
             return next(err);
         }
 
-        res.render("account/users", {title: "User - Main Page", user: user});
+        res.json(user);
     });
 });
 

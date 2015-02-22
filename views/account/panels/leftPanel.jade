@@ -1,0 +1,11 @@
+each book, index in books
+    if (index === 0)
+        li(class="active", id="firstBook")
+            a(class="light-colorize", href="#", onclick="TUMLA.removeBook(this)")
+                i(class="colorize fix-margin fa fa-fw fa-book")
+                | #{book}
+    else
+        li
+            a(class="light-colorize", href="#", onclick="TUMLA.removeBook(this)")
+                i(class="colorize fix-margin fa fa-fw fa-book")
+                | #{book}

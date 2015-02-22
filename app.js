@@ -10,6 +10,8 @@ var passport = require("passport");
 var routes = require('./controllers/index');
 var users = require('./controllers/users');
 var account = require("./controllers/account");
+var translations = require("./controllers/translations");
+var books = require("./controllers/books");
 
 var db = require("./lib/db");
 var passportLib = require("./lib/passport");
@@ -37,9 +39,11 @@ app.use(passport.session());
 passportLib.init(passport);
 db.connect();
 
-app.use('/', routes);
-app.use('/users', users);
+app.use("/", routes);
+app.use("/users", users);
 app.use("/account", account);
+app.use("/translations", translations);
+app.use("/books", books);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,3 +1,33 @@
-input.fix-margin {
-  margin-right: 5px;
+@colorize: #fed136;
+
+.fix-margin {
+  margin-right: 5px !important;
+}
+
+.fix-margin-left {
+  margin-left: 5px !important;
+}
+
+.fix-margin-all {
+  margin: 5px 15px !important;
+}
+
+.navbar-brand {
+  .script-font;
+}
+
+.colorize {
+  color: @colorize !important;
+}
+
+.light-colorize {
+  color: lighten(@colorize, 35%) !important;
+}
+
+.dark-colorize {
+  color: darken(@colorize, 35%) !important;
+}
+
+.script-font() {
+  font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
 }

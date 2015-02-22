@@ -1,5 +1,71 @@
-extends ../visitor/layout
+extends layout
 block content
-   h1="hello " + user.username
-   p="your fucking secret password is: " + user.password
-   p="those damned hashed passwords! :D"
+   div(id="wrapper")
+
+      // Navigation
+      nav(class="navbar navbar-inverse navbar-fixed-top", role="navigation")
+         // Grouped for mobile
+         div(class="navbar-header")
+            button(type="button", class="navbar-toggle", data-toggle="collapse", data-target=".navbar-ex1-collapse")
+               span(class="sr-only") Toggle navigation
+               span(class="icon-bar")
+               span(class="icon-bar")
+               span(class="icon-bar")
+            a(class="colorize navbar-brand", href="index.html") Tumla
+         // Top Menu Items
+         ul(class="nav navbar-right top-nav")
+            // possible to add more li here
+            li(class="dropdown")
+               a(href="#", class="light-colorize dropdown-toggle", data-toggle="dropdown", id="menu")
+                  i(class="colorize fix-margin fa fa-user")
+                  | #{user.username}
+                  b(class="caret")
+               ul(class="dropdown-menu")
+                  li
+                     a(class="dark-colorize", href="#")
+                       i(class="fix-margin fa fa-fw fa-user")
+                       | Profile
+                  li
+                     a(class="dark-colorize", href="#")
+                       i(class="fix-margin fa fa-fw fa-envelope")
+                       | Inbox
+                  li
+                     a(class="dark-colorize", id="logout", href="/logout")
+                       i(class="fix-margin fa fa-fw fa-power-off")
+                       | Logout
+         // Side Menu Items
+         div(class="collapse navbar-collapse navbar-ex1-collapse")
+            ul(class="nav navbar-nav side-nav")
+               include ./panels/leftPanel.jade
+               li
+                  input(class="fix-margin-all input-sm", name="book", type="text", placeholder="...add a book")
+                  input(class="fix-margin-all btn btn-warning btn-sm", onclick="TUMLA.postBook();", type="button", value="Add")
+      // nav ends here
+      div(id="page-wrapper")
+         div(class="container-fluid")
+            // inner page heading
+            div(class="row")
+               div(class="col-lg-12")
+                  // inner page title
+                  h1(class="page-header") Translations
+                     small(class="fix-margin-left") Overview
+                  // breadcrumbs
+            // row end
+            div(class="row")
+               // 1st element
+               div(class="col-xs-12")
+                  div(class="panel panel-yellow")
+                     div(class="panel-heading")
+                        div="Translate!"
+                     a(href="#")
+                        div(class="panel-footer")
+                           div(class="row")
+                              div(class="col-md-5")
+                                 input(class="form-control", name="original", type="text", placeholder="original...")
+                              div(class="col-md-5")
+                                 input(class="form-control", name="translation", type="text", placeholder="translation...")
+                              div(class="col-md-2")
+                                 input(id="translate", class="btn btn-warning btn-block",  onclick="TUMLA.postTranslation();", type="button", value="Submit")
+
+            div(class="row", id="translations")
+               include ./panels/yellow.jade

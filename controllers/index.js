@@ -8,7 +8,7 @@ router.get('/', function (req, res) {
 
 router.post("/login", passport.authenticate("authenticate", {
     successRedirect: '/account',
-    failureRedirect: '/login'
+    failureRedirect: '/'
 }));
 
 router.get("/logout", function (req, res) {

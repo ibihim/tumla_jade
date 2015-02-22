@@ -1,0 +1,9 @@
+each translation in translations
+    div(class="col-xs-12")
+        div(class="translation panel panel-yellow")
+            div(class="panel-heading")
+                div=translation.original
+
+            a(href="#")
+                div(class="panel-footer") #{translation.translation}
+                    div(class="clearfix")
