@@ -4,6 +4,8 @@ module.exports = function () {
 
     return {
         files: [
+            "app.js",
+            "index.js",
             "Gruntfile.js",
             "config/**/*.js",
             "controllers/**/*.js",

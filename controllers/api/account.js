@@ -3,8 +3,8 @@
 var _ = require("lodash");
 var express = require('express');
 var router = express.Router();
-var Translation = require("../models/Translation");
-var Book = require("../models/Book");
+var Translation = require("../../models/Translation");
+var Book = require("../../models/Book");
 
 router.get("/", isLoggedIn, function (req, res, next) {
 

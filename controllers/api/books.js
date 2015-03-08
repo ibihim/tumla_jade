@@ -2,7 +2,7 @@
 
 var express = require('express'),
     router = express.Router(),
-    Book = require("../models/Book");
+    Book = require("../../models/Book");
 
 router.get("/", isLoggedIn, function (req, res, next) {
     Book.find({userId: req.user.id},

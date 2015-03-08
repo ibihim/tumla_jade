@@ -2,8 +2,8 @@
 
 var express = require('express'),
     router = express.Router(),
-    Translation = require("../models/Translation"),
-    Book = require("../models/Book");
+    Translation = require("../../models/Translation"),
+    Book = require("../../models/Book");
 
 router.get("/", isLoggedIn, function (req, res, next) {
     Translation.find({username: req.user.username},
