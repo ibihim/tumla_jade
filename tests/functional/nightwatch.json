@@ -1,5 +1,5 @@
 {
-  "src_folders": ["tests/functional"],
+  "src_folders": ["tests/functional/tests"],
   "test_settings": {
     "default" : {
       "launch_url" : "http://localhost",

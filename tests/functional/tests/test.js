@@ -31,7 +31,7 @@ module.exports = {
             .setValue(homepage.passwordField, user.password)
             .click(homepage.submitButton)
             .waitForElementPresent(accountpage.menu, timeout)
-            .assert.containsText(accountpage.menu, user.name)
+            .assert.containsText(accountpage.menu, user.name);
     },
     "add translation": function (browser) {
         var original = "hello world";
@@ -43,7 +43,7 @@ module.exports = {
             .click(accountpage.translateButton)
             .waitForElementPresent(accountpage.translation, timeout)
             .assert.containsText(accountpage.translation, original)
-            .assert.containsText(accountpage.translation, translation)
+            .assert.containsText(accountpage.translation, translation);
     },
     "check for logout to work": function (browser) {
         browser
