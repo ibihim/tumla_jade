@@ -1,1 +1,27 @@
-.fix-margin{margin-right:5px !important}.fix-margin-left{margin-left:5px !important}.fix-margin-all{margin:5px 15px !important}.navbar-brand{font-family:"Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive}.colorize{color:#fed136 !important}.light-colorize{color:#fffae8 !important}.dark-colorize{color:#816401 !important}
+.hide-element {
+  display: none !important;
+}
+.navbar > li.bookLi {
+  display: none;
+}
+.fix-margin {
+  margin-right: 5px !important;
+}
+.fix-margin-left {
+  margin-left: 5px !important;
+}
+.fix-margin-all {
+  margin: 5px 15px !important;
+}
+.navbar-brand {
+  font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
+}
+.colorize {
+  color: #fed136 !important;
+}
+.light-colorize {
+  color: #fffae8 !important;
+}
+.dark-colorize {
+  color: #816401 !important;
+}

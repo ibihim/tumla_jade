@@ -1,93 +1,149 @@
-var TUMLA = {};
+var TUMLA = (function () {
+    "use strict";
 
-TUMLA.getTranslations = function () {
-    $.get("/translations", function (data) {
-        $("#result").html(JSON.stringify(data));
-        console.log("get data", data);
+    var that = {};
+
+    that.loadTranslations = function () {
+        var currentBook = $("li.active.bookLi").text(),
+            url = "/translations/" + currentBook,
+            newTranslationsHook = $("translationsHook"),
+            updateOnSuccess = function (partial) {
+                newTranslationsHook.append(partial);
+
+                // that.addFunctionalityToTranslations();
+            };
+
+        $.get(url).success(updateOnSuccess);
+    };
+
+    that.addTranslationOnSubmit = function () {
+        var bookNamePath = "li.active.bookLi",
+            originalPath = "input#original",
+            translationPath = "input#translation",
+            url = "/translations",
+            newTranslationsHook = $("translationsHook"),
+            translateButton = $("input#translate"),
+
+            updateOnSuccess = function (partial) {
+                newTranslationsHook.append(partial);
+
+                $(originalPath).val("");
+                $(translationPath).val("");
+
+                // TODO
+                // that.addFunctionalityToTranslations();
+            },
+
+            updateBooksOnFailure = function () {
+                // TODO
+                alert("ERROR IN YA FACE BIAAATCH!");
+            },
+
+            postTranslation = function () {
+                var postBody = {
+                    bookName: $(bookNamePath).text(),
+                    original: $(originalPath).text(),
+                    translation: $(translationPath).text()
+                };
+
+                console.log("postBody");
+                console.log(postBody);
+
+                $.post(url, postBody)
+                    .success(updateOnSuccess)
+                    .fail(updateBooksOnFailure);
+            };
+
+        translateButton.click(postTranslation);
+    };
+
+    that.loadBooks = function (cb) {
+        var url = "/books",
+            lastListItem = $("li#lastLi"),
+            updateOnSuccess = function (partial) {
+                lastListItem.before(partial);
+
+                that.addFunctionalityToBooks();
+
+                cb();
+            };
+
+        $.get(url).success(updateOnSuccess);
+    };
+
+    that.addBookOnSubmit = function () {
+        var url = "/books",
+            bookNameInputPath = "input[id='bookName']",
+            oldFirstBookPath = "li.active",
+            btnAddBook = $("input#btnAddBook"),
+
+            updateBooksOnSuccess = function (partial) {
+                var oldFirstBook = $(oldFirstBookPath);
+
+                oldFirstBook.before(partial);
+                oldFirstBook.removeClass("active");
+                oldFirstBook.prev().slideDown();
+
+                that.addFunctionalityToBooks();
+            },
+            updateBooksOnFailure = function () {
+                $(bookNameInputPath).val("ERROR!");
+            },
+            postRequest = function () {
+                var bookNameInput = $(bookNameInputPath),
+                    bookNameText = bookNameInput.val(),
+                    postBody = {
+                        bookName: bookNameText
+                    };
+
+                $.post(url, postBody)
+                    .success(updateBooksOnSuccess)
+                    .fail(updateBooksOnFailure);
+            };
+
+        btnAddBook.click(postRequest);
+    };
+
+    that.deleteBook = function () {
+        var bookLi = $(this),
+            thisBookName = bookLi.text(),
+            ajaxSpec = {
+                url: "/books/" + thisBookName,
+                type: "DELETE"
+            },
+            removeOnSuccess = function () {
+                bookLi.slideUp();
+                bookLi.remove();
+            };
+
+        $.ajax(ajaxSpec).success(removeOnSuccess);
+    };
+
+    that.addFunctionalityToBooks = function () {
+        var bookLiSelector = "li.bookLi",
+            removeIconSelector = "i.fa-remove",
+
+            onHoverShowRemoveIcon = function () {
+                var removeIcon = $(this).find(removeIconSelector);
+                removeIcon.show();
+            },
+            outHoverHideRemoveIcon = function () {
+                var removeIcon = $(this).find(removeIconSelector);
+                removeIcon.hide()
+            };
+
+        $(bookLiSelector)
+            .hover(onHoverShowRemoveIcon, outHoverHideRemoveIcon)
+            .click(that.deleteBook)
+            .slideDown(800);
+    };
+
+    return that;
+})();
+
+$(document).ready(function () {
+    TUMLA.loadBooks(function () {
+        TUMLA.loadTranslations();
     });
-};
-
-TUMLA.postTranslation = function () {
-    var originalField = $("input[name='original']"),
-        translationField = $("input[name='translation']"),
-        originalText = originalField.val(),
-        translationText = translationField.val();
-
-    var successTemplate = [
-        "<div class='col-xs-12'>",
-        "<div class='translation panel panel-yellow'>",
-        "<div class='panel-heading'>",
-        "<div>",
-        originalText,
-        "</div>",
-        "</div>",
-        "<a href='#'>",
-        "<div class='panel-footer'>",
-        translationText,
-        "<div class='clearfix'></div>",
-        "</div>",
-        "</a>",
-        "</div>"
-    ].join("");
-
-    var failTemplate = [
-        "<div class='col-xs-12'>",
-        "<div class='panel panel-red'>",
-        "<div class='panel-heading'>",
-        "<div>",
-        "Error!",
-        "</div>",
-        "</div>",
-        "</div>",
-        "</div>"
-    ].join("");
-
-    $.post("/translations", {
-        original: originalText,
-        translation: translationText
-    }).fail(function () {
-        $("#translations").children().first().html(failTemplate);
-    });
-
-    $("#translations").prepend(successTemplate);
-    originalField.val("");
-    translationField.val("");
-};
-
-TUMLA.postBook = function () {
-    var oldFirstBook = $("li#firstBook");
-    var bookNameInput = $("input[name='book']"),
-        bookNameText = bookNameInput.val();
-
-    var successTemplate = [
-        "<li class='active' id='firstBook'>",
-        "<a class='light-colorize' href='#'>",
-        "<i class='colorize fix-margin fa fa-fw fa-book' />",
-        bookNameText,
-        "</a>",
-        "</li>"
-    ].join("");
-
-    $.post("/books", {
-        bookName: bookNameText
-    }).success(function () {
-        oldFirstBook.before(successTemplate);
-        oldFirstBook.removeClass();
-        oldFirstBook.removeAttr("id");
-
-        bookNameInput.val("");
-    }).fail(function () {
-        bookNameInput.val("ERROR!");
-    });
-};
-
-TUMLA.removeBook = function (that) {
-    var thisBookName = $(that).text();
-
-    $.ajax({
-        url: "/books/" + thisBookName,
-        type: "DELETE"}
-    ).success(function () {
-        $(that).remove();
-    });
-};
+    TUMLA.addBookOnSubmit();
+});

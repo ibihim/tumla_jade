@@ -1,0 +1,13 @@
+each book, index in books
+    if index === 0
+        li(class="active bookLi", style="display: none;")
+            a(class="light-colorize")
+                i(class="colorize fix-margin fa fa-fw fa-book")
+                | #{book.name}
+                i(class="colorize fa fa-fw fa-remove pull-right", style="display: none;")
+    else
+        li(class="bookLi" style="display: none;")
+            a(class="light-colorize")
+                i(class="colorize fix-margin fa fa-fw fa-book")
+                | #{book.name}
+                i(class="colorize fa fa-fw fa-remove pull-right", style="display: none;")

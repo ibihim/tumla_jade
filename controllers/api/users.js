@@ -10,12 +10,12 @@ router.post("/", function (req, res, next) {
         password: req.body.password
     });
 
-    user.save(function (err, user) {
+    user.save(function (err, savedUser) {
         if (err) {
             return next(err);
         }
 
-        res.json(user);
+        res.json(savedUser);
     });
 });
 

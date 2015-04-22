@@ -8,19 +8,13 @@ var Book = require("../../models/Book");
 
 router.get("/", isLoggedIn, function (req, res, next) {
 
-    Book.find({userId: req.user.id}, function (err, books) {
+    Book.find({userId: req.user.id, name: "default"}, function (err, books) {
         if(err){
             console.log(err);
         }
 
-        var defaultBook = _.find(books, function (book) {
-            return book.name === "default";
-        });
-
-        var bookNames = _.map(books, function (book) {
-            return book.name;
-        });
-
+        // TODO user without books are fucked up =>
+        var defaultBook = books[0];
         Translation.find({bookId: defaultBook.id}, function (err, translations) {
             if (err) {
                 return next(err);
@@ -29,8 +23,7 @@ router.get("/", isLoggedIn, function (req, res, next) {
             res.render("account/index", {
                 title: "Account - Main Page",
                 user: req.user,
-                translations: translations,
-                books: bookNames
+                translations: translations
             });
         });
     });

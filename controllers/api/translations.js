@@ -2,66 +2,85 @@
 
 var express = require('express'),
     router = express.Router(),
+    jade = require("jade"),
     Translation = require("../../models/Translation"),
-    Book = require("../../models/Book");
+    Book = require("../../models/Book"),
+    translationsPartialPath = "views/account/panels/mainPartial.jade",
 
-router.get("/", isLoggedIn, function (req, res, next) {
-    Translation.find({username: req.user.username},
-        function (err, translations) {
+    getTranslations = function (req, res, next) {
+        var translationsToFind = { username: req.user.username };
+
+        if (req.params.bookName) {
+            translationsToFind.bookName = req.params.bookName;
+        }
+
+        Translation.find(translationsToFind, function (err, translations) {
             if (err) {
                 return next(err);
             }
-            res.json(translations);
+
+            var translationsPartial = jade.compileFile(translationsPartialPath),
+                partialAsHtml = translationsPartial({ translations: translations });
+
+            res.send(partialAsHtml);
+        });
+    },
+
+    postTranslations = function (req, res, next) {
+
+        var translation = new Translation({
+                userId: req.user.id,
+                original: req.body.original,
+                translation: req.body.translation
+            }),
+
+            saveWithBookId = function (err, book) {
+                if (err) {
+                    next(err);
+                }
+
+                translation.bookId = book.id;
+
+                translation.save(sendPartial);
+            },
+
+            sendPartial = function (err, translation) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.send(partialWithTranslationsAsHtml(
+                    { translations: [translation] }
+                ));
+            };
+
+        if (!req.body.bookName) {
+            req.body.bookName = "default";
         }
-    );
-});
 
-router.post("/", isLoggedIn, function (req, res, next) {
-
-    function sendOk (err) {
-        if (err) {
-            return next(err);
-        }
-
-        return res.send(200);
-    }
-
-    function saveTranslationWithBookId (err, book) {
-        if (err) {
-            next(err);
-        }
-        translation.bookId = book.id;
-
-        translation.save(sendOk);
-    }
-
-    var translation = new Translation({
-        userId: req.user.id,
-        original: req.body.original,
-        translation: req.body.translation
-    });
-
-    if (req.body && req.body.bookName) {
-        console.log("setting book for translation to" + req.body.bookName);
-
-        Book.find(
-            {userId: req.user.id, name: req.body.bookName},
-            saveTranslationWithBookId
+        Book.findOne(
+            { userId: req.user.id, name: req.body.bookName },
+            "id",
+            saveWithBookId
         );
-    } else {
-        Book.find(
-            {userId: req.user.id, name: "default"},
-            saveTranslationWithBookId
-        );
-    }
-});
+    },
 
-function isLoggedIn (req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
+    partialWithTranslationsAsHtml = function (translations) {
+        var translationsPartial = jade.compileFile(translationsPartialPath);
 
-    res.redirect("/");
-}
+        return translationsPartial({ translations: translations });
+    },
+
+    isLoggedIn = function (req, res, next) {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+
+        res.redirect("/");
+    };
+
+router.get("/", isLoggedIn, getTranslations);
+router.get("/:bookName", isLoggedIn, getTranslations);
+router.post("/", isLoggedIn, postTranslations);
 
 module.exports = router;

@@ -36,10 +36,10 @@ block content
          // Side Menu Items
          div(class="collapse navbar-collapse navbar-ex1-collapse")
             ul(class="nav navbar-nav side-nav")
-               include ./panels/leftPanel.jade
-               li
-                  input(class="fix-margin-all input-sm", name="book", type="text", placeholder="...add a book")
-                  input(class="fix-margin-all btn btn-warning btn-sm", onclick="TUMLA.postBook();", type="button", value="Add")
+               // place for books to be parsed in, lastLI is hook
+               li(id="lastLi")
+                  input(class="fix-margin-all input-sm", id="bookName", type="text", placeholder="...add a book")
+                  input(class="fix-margin-all btn btn-warning btn-sm", id="btnAddBook", type="button", value="Add")
       // nav ends here
       div(id="page-wrapper")
          div(class="container-fluid")
@@ -61,11 +61,11 @@ block content
                         div(class="panel-footer")
                            div(class="row")
                               div(class="col-md-5")
-                                 input(class="form-control", name="original", type="text", placeholder="original...")
+                                 input(class="form-control", id="original", type="text", placeholder="original...")
                               div(class="col-md-5")
-                                 input(class="form-control", name="translation", type="text", placeholder="translation...")
+                                 input(class="form-control", id="translation", type="text", placeholder="translation...")
                               div(class="col-md-2")
-                                 input(id="translate", class="btn btn-warning btn-block",  onclick="TUMLA.postTranslation();", type="button", value="Submit")
+                                 input(id="translate", class="btn btn-warning btn-block", type="button", value="Submit")
 
-            div(class="row", id="translations")
-               include ./panels/yellow.jade
+            div(class="row", id="translationsHook")
+               include ./panels/mainPartial.jade
